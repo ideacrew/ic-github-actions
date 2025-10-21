@@ -1,9 +1,16 @@
 name: Build and Push Image
-description: Build and push the image and also update the 'latest' image.
+description: |
+  Build and push the image.
+
+  Optionally also update the 'latest' image tag.
 inputs:
   dockerFile:
     required: true
     description: Path to the docker build file in the project.
+  dockerTarget:
+    required: false
+    description: Name of the target docker stage.
+    default: "deploy"
   baseImageName:
     required: true
     description: Base name of the image, without a tag, such as 'ideacrew/enroll'.
@@ -87,7 +94,7 @@ runs:
         builder: ${{ steps.buildx.outputs.name }}
         file: ${{ inputs.dockerFile }}
         # Set the desired build target here
-        target: deploy
+        target: ${{ inputs.dockerTarget }}
         # needed to access mongo and rabbit on GHA machine
         network: host
         # send to public registry if not a pull request
