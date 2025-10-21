@@ -37,6 +37,22 @@ inputs:
     required: false
     description: Should we also update the latest docker image?
     default: "false"
+  lastUpdateStamp:
+    required: false
+    description: |
+      A text tag used for cache busting when fetching updates for the docker image.
+      
+      It's passed as a docker build argument, usually of the form YYYYMMDD.
+      
+      This can be used to explicitly track, in the repository using the action,
+        the last time the image had security updates run during the build process.
+      
+      It's injected into the image as the `LAST_IMAGE_UPDATE_BUMP` build argument.
+
+      It's up to the **developer** to make use of this variable in the Docker file to bust the cache.
+
+      Right now it defaults to the last time someone set the default in the github action.
+    default: "20251021"
 outputs:
   imageLocation:
     description: The location the image was uploaded to, if any.
@@ -109,6 +125,7 @@ runs:
         cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
         build-args: |
           HOSTNAME=172.17.0.1
+          LAST_IMAGE_UPDATE_BUMP=${{ inputs.lastUpdateStamp }}
     - name: Move cache
       shell: "bash"
       run: |
