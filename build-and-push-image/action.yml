@@ -16,7 +16,7 @@ inputs:
     description: Base name of the image, without a tag, such as 'ideacrew/enroll'.
   tagName:
     required: true
-    description: Tag suffix to apply to the end of the image name, usually '<branch-name>-<short sha>'.
+    description: Tag suffix to apply to the end of the image name, usually '\<branch-name>-\<short sha>'.
   registryGhcr:
     required: false
     description: The GCHR registry for uploads.
