@@ -53,6 +53,15 @@ inputs:
 
       Right now it defaults to the last time someone set the default in the github action.
     default: "20251021"
+  secrets:
+    required: false
+    description: |
+      Build secrets to expose to the docker build, one `id=value` pair per line.
+
+      They are forwarded to the `secrets` input of `docker/build-push-action` and mounted
+        in the build with `RUN --mount=type=secret,id=<id>`, so the value is never written
+        to an image layer or `docker history`.
+    default: ""
 outputs:
   imageLocation:
     description: The location the image was uploaded to, if any.
@@ -126,6 +135,7 @@ runs:
         build-args: |
           HOSTNAME=172.17.0.1
           LAST_IMAGE_UPDATE_BUMP=${{ inputs.lastUpdateStamp }}
+        secrets: ${{ inputs.secrets }}
     - name: Move cache
       shell: "bash"
       run: |
